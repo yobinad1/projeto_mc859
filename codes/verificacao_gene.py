@@ -1,7 +1,7 @@
 import pandas as pd
 import gzip
 
-with gzip.open("/home/daniel/Documents/Unicamp/IC/MC859.2/disgenet/download/all_gene_disease_associations.txt.gz", "rt") as f:
+with gzip.open("/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/disgenet/download/all_gene_disease_associations.txt.gz", "rt") as f:
     df = pd.read_csv(f, sep="\t")
     
 gene_consistency = df.groupby("geneSymbol")["geneId"].nunique()
