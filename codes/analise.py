@@ -6,8 +6,7 @@ import os
 output_dir = "/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/output_images"
 os.makedirs(output_dir, exist_ok=True) 
 
-
-G_tmfg = nx.read_graphml("tmfg_cache.graphml")
+G_tmfg = nx.read_graphml("/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/graph/tmfg_cache.graphml")
 
 print("\n--- Informações do Grafo TMFG ---")
 is_planar, cert = nx.check_planarity(G_tmfg)
