@@ -64,3 +64,17 @@ file_path = os.path.join(output_dir, 'distribuicao_graus_log.png')
 plt.savefig(file_path)
 print(f"\nGráfico salvo em: '{file_path}'")
 
+degree_counts = np.bincount(degrees)  # índice = grau, valor = frequência
+degree_values = np.nonzero(degree_counts)[0]  # apenas graus existentes
+frequency = degree_counts[degree_values]
+
+plt.figure(figsize=(12, 7))
+plt.loglog(degree_values, frequency, marker='o', linestyle='None', color='red', markersize=2)
+plt.title('Distribuição de Graus da Rede de Doenças (Log-Log)')
+plt.xlabel('Grau (Número de Conexões)')
+plt.ylabel('Frequência (Número de Doenças)')
+plt.grid(True, which="both", ls="--", alpha=0.6)
+
+file_path = os.path.join(output_dir, 'distribuicao_graus_loglog.png')
+plt.savefig(file_path)
+print(f"\nGráfico salvo em: '{file_path}'")
