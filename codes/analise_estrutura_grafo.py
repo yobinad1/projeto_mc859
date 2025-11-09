@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-output_dir = "/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/output_images"
+output_dir = "/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/output_images/distribuicao_graus"
 os.makedirs(output_dir, exist_ok=True) 
 
 G_tmfg = nx.read_graphml("/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/graph/tmfg_cache.graphml")

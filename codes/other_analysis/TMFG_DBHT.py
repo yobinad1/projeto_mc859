@@ -1,10 +1,13 @@
 import pandas as pd
+import csv
 import gzip
 import networkx as nx
 import numpy as np
 import os
 from itertools import combinations
 from collections import defaultdict
+from scipy.spatial.distance import squareform
+from scipy.cluster.hierarchy import linkage, fcluster
 
 # Carregar os dados
 with gzip.open("/home/daniel/Documents/Unicamp/IC/MC859/projeto_mc859/disgenet/download/all_gene_disease_associations.txt.gz", "rt") as f:
@@ -151,13 +154,57 @@ G_tmfg = tmfg(W)
 mapping = {i: d for i, d in enumerate(doencas)}
 G_tmfg = nx.relabel_nodes(G_tmfg, mapping)
 
-# Remove arestas de peso zero
-edges_to_remove = [(u, v) for u, v, d in G_tmfg.edges(data=True) if d.get('weight', 1) == 0]
-G_tmfg.remove_edges_from(edges_to_remove)
+#Início do clustering hierárquico baseado em faces (DBHT)
+faces = []
+for u in G_tmfg.nodes():
+    neighbors = list(G_tmfg.neighbors(u))
+    # Gerar todas combinações de 2 vizinhos para formar triângulos com u
+    for v, w in combinations(neighbors, 2):
+        if G_tmfg.has_edge(v, w):
+            tri = tuple(sorted([u, v, w]))
+            if tri not in faces:
+                faces.append(tri)
+                
+                
+N = len(doencas)
+index_map = {d: i for i, d in enumerate(doencas)}
+S = np.zeros((N, N))
+
+for u, v, w in faces:
+    i, j, k = index_map[u], index_map[v], index_map[w]
+    S[i, j] += 1
+    S[i, k] += 1
+    S[j, k] += 1
+
+# Normalizar similaridade para [0,1]
+S = S / np.max(S)
+
+# Tornar simétrica
+S = (S + S.T) / 2
+
+# Step 3: Clustering hierárquico
+# Converte similaridade em distância
+D = 1 - S
+np.fill_diagonal(D, 0)
+D_condensed = squareform(D)  # necessário para linkage
+Z = linkage(D_condensed, method='average')
+
+# Step 4: Definir clusters (ex: cortando a árvore em 10 clusters)
+clusters = fcluster(Z, t=10, criterion='maxclust')
+
+# Mapeamento doença -> cluster
+disease_clusters = {doencas[i]: clusters[i] for i in range(N)}
+
+
 
 # Salvar o grafo TMFG em GraphML
-output_dir = 'graph'
+output_dir = 'other_analysis/outputs'
 os.makedirs(output_dir, exist_ok=True)
-full_path = os.path.join(output_dir, 'tmfg_cache.graphml')
+full_path = os.path.join(output_dir, 'tmfg_dbht_cache.graphml')
 nx.write_graphml(G_tmfg, full_path)
 
+with open(os.path.join(output_dir, 'dbht_clusters.csv'), 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['diseaseId', 'cluster'])
+    for disease, cluster in disease_clusters.items():
+        writer.writerow([disease, cluster])

@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1100px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "black"}, "id": 0, "label": "1", "shape": "dot", "size": 46.40692831785141, "title": "Comunidade 1, Tamanho: 1453 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 1, "label": "2", "shape": "dot", "size": 45.923145763586575, "title": "Comunidade 2, Tamanho: 1319 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 2, "label": "3", "shape": "dot", "size": 45.626415457553556, "title": "Comunidade 3, Tamanho: 1243 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 3, "label": "4", "shape": "dot", "size": 45.353620536301385, "title": "Comunidade 4, Tamanho: 1177 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 4, "label": "5", "shape": "dot", "size": 45.28948968705928, "title": "Comunidade 5, Tamanho: 1162 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 5, "label": "6", "shape": "dot", "size": 45.20705831897405, "title": "Comunidade 6, Tamanho: 1143 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 6, "label": "7", "shape": "dot", "size": 44.97883078152425, "title": "Comunidade 7, Tamanho: 1092 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 7, "label": "8", "shape": "dot", "size": 43.86540187827768, "title": "Comunidade 8, Tamanho: 874 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 8, "label": "9", "shape": "dot", "size": 42.30734088176859, "title": "Comunidade 9, Tamanho: 640 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 9, "label": "10", "shape": "dot", "size": 41.34548141853131, "title": "Comunidade 10, Tamanho: 528 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 10, "label": "11", "shape": "dot", "size": 40.61246404757193, "title": "Comunidade 11, Tamanho: 456 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 11, "label": "12", "shape": "dot", "size": 39.38867890889819, "title": "Comunidade 12, Tamanho: 357 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 12, "label": "13", "shape": "dot", "size": 38.93448690683354, "title": "Comunidade 13, Tamanho: 326 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 13, "label": "14", "shape": "dot", "size": 38.65049891486787, "title": "Comunidade 14, Tamanho: 308 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 14, "label": "15", "shape": "dot", "size": 37.0582302592752, "title": "Comunidade 15, Tamanho: 224 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 15, "label": "16", "shape": "dot", "size": 36.28747686013891, "title": "Comunidade 16, Tamanho: 192 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 16, "label": "17", "shape": "dot", "size": 35.55993894178272, "title": "Comunidade 17, Tamanho: 166 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 17, "label": "18", "shape": "dot", "size": 35.21712558459623, "title": "Comunidade 18, Tamanho: 155 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 18, "label": "19", "shape": "dot", "size": 35.184763012068146, "title": "Comunidade 19, Tamanho: 154 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 19, "label": "20", "shape": "dot", "size": 34.95216293389368, "title": "Comunidade 20, Tamanho: 147 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 20, "label": "21", "shape": "dot", "size": 34.18140953475739, "title": "Comunidade 21, Tamanho: 126 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 21, "label": "22", "shape": "dot", "size": 33.72466064181625, "title": "Comunidade 22, Tamanho: 115 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 22, "label": "23", "shape": "dot", "size": 33.59249435647547, "title": "Comunidade 23, Tamanho: 112 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 23, "label": "24", "shape": "dot", "size": 33.50240182896208, "title": "Comunidade 24, Tamanho: 110 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 24, "label": "25", "shape": "dot", "size": 32.71647391135002, "title": "Comunidade 25, Tamanho: 94 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 25, "label": "26", "shape": "dot", "size": 32.21325628245158, "title": "Comunidade 26, Tamanho: 85 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 26, "label": "27", "shape": "dot", "size": 31.783544133447958, "title": "Comunidade 27, Tamanho: 78 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 27, "label": "28", "shape": "dot", "size": 30.948273710132128, "title": "Comunidade 28, Tamanho: 66 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 28, "label": "29", "shape": "dot", "size": 30.302215052732095, "title": "Comunidade 29, Tamanho: 58 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 29, "label": "30", "shape": "dot", "size": 29.75621859290714, "title": "Comunidade 30, Tamanho: 52 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 30, "label": "31", "shape": "dot", "size": 28.18793079863193, "title": "Comunidade 31, Tamanho: 38 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 31, "label": "32", "shape": "dot", "size": 27.63180262308081, "title": "Comunidade 32, Tamanho: 34 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 32, "label": "33", "shape": "dot", "size": 26.29048269010741, "title": "Comunidade 33, Tamanho: 26 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 33, "label": "34", "shape": "dot", "size": 25.45521226679158, "title": "Comunidade 34, Tamanho: 22 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 34, "label": "35", "shape": "dot", "size": 24.451858789480823, "title": "Comunidade 35, Tamanho: 18 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 35, "label": "36", "shape": "dot", "size": 23.540251005511053, "title": "Comunidade 36, Tamanho: 15 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 36, "label": "37", "shape": "dot", "size": 23.540251005511053, "title": "Comunidade 37, Tamanho: 15 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 37, "label": "38", "shape": "dot", "size": 22.82474678730768, "title": "Comunidade 38, Tamanho: 13 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 38, "label": "39", "shape": "dot", "size": 22.82474678730768, "title": "Comunidade 39, Tamanho: 13 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 39, "label": "40", "shape": "dot", "size": 21.989476363991855, "title": "Comunidade 40, Tamanho: 11 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 40, "label": "41", "shape": "dot", "size": 21.51292546497023, "title": "Comunidade 41, Tamanho: 10 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 41, "label": "42", "shape": "dot", "size": 20.39720770839918, "title": "Comunidade 42, Tamanho: 8 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 42, "label": "43", "shape": "dot", "size": 18.0471895621705, "title": "Comunidade 43, Tamanho: 5 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 43, "label": "44", "shape": "dot", "size": 13.465735902799727, "title": "Comunidade 44, Tamanho: 2 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 44, "label": "45", "shape": "dot", "size": 13.465735902799727, "title": "Comunidade 45, Tamanho: 2 doen\u00e7as"}, {"color": "#97c2fc", "font": {"color": "black"}, "id": 45, "label": "46", "shape": "dot", "size": 13.465735902799727, "title": "Comunidade 46, Tamanho: 2 doen\u00e7as"}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 3, "value": 10.0}, {"from": 0, "to": 5, "value": 4.873949579831932}, {"from": 0, "to": 4, "value": 1.0084033613445378}, {"from": 0, "to": 29, "value": 1.2605042016806722}, {"from": 0, "to": 25, "value": 1.5126050420168067}, {"from": 0, "to": 24, "value": 1.6806722689075633}, {"from": 0, "to": 11, "value": 2.6890756302521006}, {"from": 0, "to": 22, "value": 0.9243697478991597}, {"from": 0, "to": 9, "value": 4.621848739495799}, {"from": 0, "to": 15, "value": 4.957983193277311}, {"from": 0, "to": 16, "value": 0.5882352941176471}, {"from": 0, "to": 12, "value": 6.6386554621848735}, {"from": 0, "to": 31, "value": 1.3445378151260503}, {"from": 0, "to": 27, "value": 0.1680672268907563}, {"from": 0, "to": 1, "value": 1.1764705882352942}, {"from": 0, "to": 28, "value": 0.8403361344537816}, {"from": 0, "to": 17, "value": 1.092436974789916}, {"from": 0, "to": 10, "value": 1.5126050420168067}, {"from": 0, "to": 13, "value": 0.7563025210084033}, {"from": 0, "to": 40, "value": 0.25210084033613445}, {"from": 0, "to": 35, "value": 0.3361344537815126}, {"from": 0, "to": 14, "value": 0.5042016806722689}, {"from": 1, "to": 5, "value": 1.092436974789916}, {"from": 1, "to": 10, "value": 5.126050420168067}, {"from": 1, "to": 28, "value": 1.3445378151260503}, {"from": 1, "to": 17, "value": 0.8403361344537816}, {"from": 1, "to": 19, "value": 2.100840336134454}, {"from": 1, "to": 13, "value": 1.2605042016806722}, {"from": 1, "to": 36, "value": 0.4201680672268908}, {"from": 2, "to": 6, "value": 3.3613445378151265}, {"from": 2, "to": 4, "value": 1.092436974789916}, {"from": 2, "to": 7, "value": 1.4285714285714284}, {"from": 2, "to": 38, "value": 0.1680672268907563}, {"from": 2, "to": 34, "value": 0.3361344537815126}, {"from": 2, "to": 18, "value": 2.100840336134454}, {"from": 2, "to": 26, "value": 0.08403361344537814}, {"from": 3, "to": 4, "value": 8.907563025210084}, {"from": 3, "to": 6, "value": 1.5126050420168067}, {"from": 3, "to": 5, "value": 3.277310924369748}, {"from": 3, "to": 22, "value": 1.092436974789916}, {"from": 3, "to": 27, "value": 0.5882352941176471}, {"from": 3, "to": 21, "value": 1.5126050420168067}, {"from": 3, "to": 24, "value": 2.184873949579832}, {"from": 3, "to": 42, "value": 0.08403361344537814}, {"from": 4, "to": 6, "value": 2.5210084033613445}, {"from": 4, "to": 5, "value": 4.705882352941177}, {"from": 4, "to": 29, "value": 1.3445378151260503}, {"from": 4, "to": 8, "value": 9.663865546218487}, {"from": 4, "to": 32, "value": 0.4201680672268908}, {"from": 4, "to": 38, "value": 0.08403361344537814}, {"from": 4, "to": 23, "value": 3.277310924369748}, {"from": 4, "to": 34, "value": 0.08403361344537814}, {"from": 5, "to": 6, "value": 0.5882352941176471}, {"from": 5, "to": 29, "value": 1.1764705882352942}, {"from": 5, "to": 21, "value": 1.3445378151260503}, {"from": 5, "to": 20, "value": 2.8571428571428568}, {"from": 5, "to": 12, "value": 1.8487394957983194}, {"from": 5, "to": 9, "value": 2.100840336134454}, {"from": 5, "to": 31, "value": 0.6722689075630252}, {"from": 5, "to": 30, "value": 0.25210084033613445}, {"from": 5, "to": 22, "value": 2.100840336134454}, {"from": 5, "to": 25, "value": 2.0168067226890756}, {"from": 5, "to": 8, "value": 4.285714285714286}, {"from": 5, "to": 15, "value": 2.26890756302521}, {"from": 5, "to": 10, "value": 3.1092436974789917}, {"from": 5, "to": 11, "value": 4.285714285714286}, {"from": 5, "to": 32, "value": 0.6722689075630252}, {"from": 5, "to": 17, "value": 1.6806722689075633}, {"from": 5, "to": 16, "value": 3.697478991596639}, {"from": 5, "to": 37, "value": 0.3361344537815126}, {"from": 5, "to": 41, "value": 0.08403361344537814}, {"from": 6, "to": 21, "value": 2.184873949579832}, {"from": 6, "to": 20, "value": 1.1764705882352942}, {"from": 6, "to": 7, "value": 8.15126050420168}, {"from": 6, "to": 26, "value": 0.6722689075630252}, {"from": 6, "to": 38, "value": 0.08403361344537814}, {"from": 6, "to": 23, "value": 1.2605042016806722}, {"from": 6, "to": 33, "value": 0.25210084033613445}, {"from": 6, "to": 39, "value": 0.1680672268907563}, {"from": 7, "to": 26, "value": 0.3361344537815126}, {"from": 9, "to": 30, "value": 0.25210084033613445}, {"from": 10, "to": 13, "value": 0.5882352941176471}, {"from": 12, "to": 31, "value": 0.25210084033613445}, {"from": 15, "to": 16, "value": 0.3361344537815126}, {"from": 25, "to": 29, "value": 0.08403361344537814}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.9,
+            "nodeDistance": 300,
+            "springConstant": 0.01,
+            "springLength": 150
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
